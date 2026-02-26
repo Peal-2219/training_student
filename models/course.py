@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import models, fields, api
+
 
 class TrainingCourse(models.Model):
     _name = 'training.course'
@@ -22,3 +23,12 @@ class TrainingCourse(models.Model):
         'course_id',
         string="Enrollments"
     )
+
+    student_count = fields.Integer(
+        compute="_compute_student_count"
+    )
+
+    @api.depends('student_ids')
+    def _compute_student_count(self):
+        for record in self:
+            record.student_count = len(record.student_ids)

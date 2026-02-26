@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ========================= -->
+    <!-- STUDENT LIST VIEW -->
+    <!-- ========================= -->
+    <record id="view_student_list" model="ir.ui.view">
+        <field name="name">training.student.list</field>
+        <field name="model">training.student</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="student_age"/>
+                <field name="course_name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- STUDENT FORM VIEW -->
+    <!-- ========================= -->
+    <record id="view_student_form" model="ir.ui.view">
+        <field name="name">training.student.form</field>
+        <field name="model">training.student</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="dob"/>
+                        <field name="student_age" readonly="1"/>
+                        <field name="course_id"/>
+                        <field name="admission_date"/>
+                        <field name="active"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Enrollments">
+                            <field name="enrollment_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="course_id"/>
+                                    <field name="enrollment_date"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- ACTION -->
+    <!-- ========================= -->
+    <record id="action_student" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">training.student</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- MENU -->
+    <!-- ========================= -->
+    <menuitem id="menu_training_root" name="Training"/>
+
+    <menuitem id="menu_student"
+              name="Students"
+              parent="menu_training_root"
+              action="action_student"/>
+
+</odoo>
