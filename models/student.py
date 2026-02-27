@@ -1,7 +1,7 @@
 # models/student.py
 
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from datetime import date
 
 
@@ -10,6 +10,20 @@ class TrainingStudent(models.Model):
     _description = 'Training Student'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
+
+    # =========================
+    # STATE FIELD
+    # =========================
+    state = fields.Selection(
+        [
+            ('draft', 'Draft'),
+            ('confirmed', 'Confirmed'),
+            ('alumni', 'Alumni')
+        ],
+        string="Status",
+        default='draft',
+        tracking=True
+    )
 
     # =========================
     # BASIC FIELDS
@@ -77,6 +91,25 @@ class TrainingStudent(models.Model):
             record.enrollment_count = len(record.enrollment_ids)
 
     # =========================
+    # STATE ACTION METHODS
+    # =========================
+    def action_confirm(self):
+        self._check_manager()
+        self.state = 'confirmed'
+
+    def action_set_alumni(self):
+        self._check_manager()
+        self.state = 'alumni'
+
+    def action_reset_draft(self):
+        self._check_manager()
+        self.state = 'draft'
+
+    def _check_manager(self):
+        if not self.env.user.has_group('training_student.group_training_manager'):
+            raise UserError("Only Training Manager can change the student status!")
+
+    # =========================
     # CONSTRAINT
     # =========================
     @api.constrains('student_age')
@@ -99,18 +132,21 @@ class TrainingStudent(models.Model):
             }
 
     # =========================
-    # ORM METHODS
+    # ORM SECURITY (Backend Protection)
     # =========================
+    def write(self, vals):
+        if 'state' in vals:
+            if not self.env.user.has_group('training_student.group_training_manager'):
+                raise UserError("You are not allowed to change student status.")
+        if 'email' in vals:
+            vals['email'] = vals['email'].lower()
+        return super().write(vals)
+
     @api.model
     def create(self, vals):
         if 'email' in vals:
             vals['email'] = vals['email'].lower()
         return super().create(vals)
-
-    def write(self, vals):
-        if 'email' in vals:
-            vals['email'] = vals['email'].lower()
-        return super().write(vals)
 
     def unlink(self):
         for record in self:

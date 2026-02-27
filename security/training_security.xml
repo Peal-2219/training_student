@@ -16,7 +16,7 @@
     <!-- Training Manager -->
     <record id="group_training_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="category_id" ref="training_student.module_category_training"/>
+        <field name="category_id" ref="base.module_category_hidden"/>
         <field name="implied_ids" eval="[(4, ref('group_training_user'))]"/>
     </record>
 
