@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    
     <!-- STUDENT LIST VIEW -->
     <record id="view_student_list" model="ir.ui.view">
         <field name="name">training.student.list</field>
