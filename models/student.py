@@ -1,3 +1,5 @@
+# models/student.py
+
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 from datetime import date
@@ -6,24 +8,37 @@ from datetime import date
 class TrainingStudent(models.Model):
     _name = 'training.student'
     _description = 'Training Student'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
 
-    name = fields.Char(string="Student Name", required=True)
-    email = fields.Char(string="Email", required=True)
-    dob = fields.Date(string="Date of Birth")
+    # =========================
+    # BASIC FIELDS
+    # =========================
+    name = fields.Char(string="Student Name", required=True, tracking=True)
+    email = fields.Char(string="Email", required=True, tracking=True)
+    dob = fields.Date(string="Date of Birth", tracking=True)
 
     student_age = fields.Integer(
         string="Age",
         compute="_compute_student_age",
-        store=True
+        store=True,
+        tracking=True
     )
 
-    admission_date = fields.Date(string="Admission Date")
-    active = fields.Boolean(default=True)
+    user_id = fields.Many2one(
+        'res.users',
+        string="Responsible User",
+        default=lambda self: self.env.user,
+        tracking=True
+    )
+
+    admission_date = fields.Date(string="Admission Date", tracking=True)
+    active = fields.Boolean(default=True, tracking=True)
 
     course_id = fields.Many2one(
         'training.course',
-        string="Course"
+        string="Course",
+        tracking=True
     )
 
     course_name = fields.Char(
@@ -102,7 +117,6 @@ class TrainingStudent(models.Model):
             if record.enrollment_ids:
                 raise ValidationError("Cannot delete student with enrollments.")
         return super().unlink()
-
 
     _sql_constraints = [
         ('unique_email', 'unique(email)', 'Email must be unique!')

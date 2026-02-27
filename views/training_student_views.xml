@@ -25,7 +25,8 @@
         <field name="name">training.student.form</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Student">
+
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -34,6 +35,7 @@
                         <field name="student_age" readonly="1"/>
                         <field name="course_id"/>
                         <field name="admission_date"/>
+                        <field name="user_id"/>
                         <field name="active"/>
                     </group>
 
@@ -50,6 +52,16 @@
                         </page>
                     </notebook>
                 </sheet>
+
+                <!-- ========================= -->
+                <!-- CHATTER -->
+                <!-- ========================= -->
+                <chatter>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </chatter>
+
             </form>
         </field>
     </record>
@@ -67,10 +79,9 @@
     <!-- MENU -->
     <!-- ========================= -->
     <menuitem id="menu_training_root" name="Training"/>
-
     <menuitem id="menu_student"
               name="Students"
               parent="menu_training_root"
               action="action_student"/>
 
-</odoo>
+</odoo> 
