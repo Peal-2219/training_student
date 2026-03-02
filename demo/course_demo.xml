@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="course_aiml" model="training.course">
+        <field name="name">AIML</field>
+        <field name="code">AIML-01</field>
+        <field name="duration">180</field>
+        <field name="fees">50000</field>
+        <field name="is_available">True</field>
+    </record>
+
+    <record id="course_it" model="training.course">
+        <field name="name">IT</field>
+        <field name="code">IT-01</field>
+        <field name="duration">120</field>
+        <field name="fees">30000</field>
+        <field name="is_available">True</field>
+    </record>
+
+</odoo>
