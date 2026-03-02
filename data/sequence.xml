@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+       <!-- SEQUENCE -->
+    <record id="seq_training_enrollment" model="ir.sequence">
+        <field name="name">Enrollment Sequence</field>
+        <field name="code">training.enrollment</field>
+        <field name="prefix">ENR/</field>
+        <field name="padding">4</field>
+    </record>
+
+</odoo>
