@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    
-    <!-- STUDENT LIST VIEW -->
-    <record id="view_student_list" model="ir.ui.view">
+
+    <!-- STUDENT LIST -->
+    <record id="view_training_student_list" model="ir.ui.view">
         <field name="name">training.student.list</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
@@ -10,58 +10,43 @@
                 <field name="name"/>
                 <field name="email"/>
                 <field name="student_age"/>
-                <field name="course_name"/>
                 <field name="state"/>
                 <field name="active"/>
             </list>
         </field>
     </record>
 
-    <!-- STUDENT FORM VIEW -->
-    <record id="view_student_form" model="ir.ui.view">
+    <!-- STUDENT FORM -->
+    <record id="view_training_student_form" model="ir.ui.view">
         <field name="name">training.student.form</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
-            <form string="Student">
-
-                <header>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="draft,confirmed,alumni"
-                           readonly="1"/>
-
-                    <!-- Buttons visible ONLY to Manager -->
-                    <button name="action_confirm"
-                            string="Confirm"
-                            type="object"
-                            class="btn-primary"
-                            groups="training_student.group_training_manager"
-                            invisible="state != 'draft'"/>
-
-                    <button name="action_set_alumni"
-                            string="Mark as Alumni"
-                            type="object"
-                            class="btn-success"
-                            groups="training_student.group_training_manager"
-                            invisible="state != 'confirmed'"/>
-
-                    <button name="action_reset_draft"
-                            string="Reset to Draft"
-                            type="object"
-                            groups="training_student.group_training_manager"
-                            invisible="state == 'draft'"/>
-                </header>
-
+            <form>
                 <sheet>
                     <group>
                         <field name="name"/>
                         <field name="email"/>
                         <field name="dob"/>
                         <field name="student_age" readonly="1"/>
-                        <field name="course_id"/>
                         <field name="admission_date"/>
                         <field name="user_id"/>
                         <field name="active"/>
+                        <field name="course_id"
+                               groups="training_student.group_training_manager"/>
                     </group>
+
+                    <notebook>
+                        <page string="Enrollments">
+                            <field name="enrollment_ids" readonly="1">
+                                <list>
+                                    <field name="enrollment_number"/>
+                                    <field name="course_id"/>
+                                    <field name="enrollment_date"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
 
                 <chatter>
@@ -69,22 +54,26 @@
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
                 </chatter>
-
             </form>
         </field>
     </record>
+
     <!-- ACTION -->
-    <record id="action_student" model="ir.actions.act_window">
+    <record id="action_training_student" model="ir.actions.act_window">
         <field name="name">Students</field>
         <field name="res_model">training.student</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <!-- MENU -->
-    <menuitem id="menu_training_root" name="Training"/>
-    <menuitem id="menu_student"
+    <menuitem id="menu_training_root"
+              name="Training"
+              sequence="10"/>
+
+    <menuitem id="menu_training_student"
               name="Students"
               parent="menu_training_root"
-              action="action_student"/>
+              action="action_training_student"
+              sequence="20"/>
 
 </odoo>
