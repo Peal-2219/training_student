@@ -9,8 +9,10 @@
     'data': [
         'security/training_security.xml',
     'security/ir.model.access.csv',
-
+    'data/sequence.xml',
     'views/training_student_views.xml',
+        'views/enrollment_views.xml',
+        'views/course_views.xml',
 ],
     'installable': True,
     'application': True,

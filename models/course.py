@@ -4,8 +4,9 @@ from odoo import models, fields, api
 class TrainingCourse(models.Model):
     _name = 'training.course'
     _description = 'Training Course'
+    _inherit = ['mail.thread', 'mail.activity.mixin']   # ✅ ADD THIS
 
-    name = fields.Char(string="Course Name", required=True)
+    name = fields.Char(string="Course Name", required=True, tracking=True)
     code = fields.Char(string="Course Code")
     duration = fields.Integer(string="Duration (Days)")
     fees = fields.Float(string="Fees")
