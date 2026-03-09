@@ -87,7 +87,6 @@
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
                 </chatter>
-
             </form>
         </field>
     </record>
