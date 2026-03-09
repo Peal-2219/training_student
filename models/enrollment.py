@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class TrainingEnrollment(models.Model):
@@ -6,27 +7,35 @@ class TrainingEnrollment(models.Model):
     _description = 'Training Enrollment'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    # ----------------------------
+    # FIELDS
+    # ----------------------------
     enrollment_number = fields.Char(
         string="Enrollment Number",
-        required=True,
+        readonly=True,
         copy=False,
-        # readonly=True,
-        # default="New"
+        default="New",
+        tracking=True
     )
 
     student_id = fields.Many2one(
         'training.student',
         string="Student",
-        required=True
+        required=True,
+        tracking=True
     )
 
     course_id = fields.Many2one(
         'training.course',
         string="Course",
-        required=True
+        required=True,
+        tracking=True
     )
 
-    enrollment_date = fields.Date(default=fields.Date.today)
+    enrollment_date = fields.Date(
+        default=fields.Date.today,
+        tracking=True
+    )
 
     status = fields.Selection([
         ('draft', 'Draft'),
@@ -34,6 +43,9 @@ class TrainingEnrollment(models.Model):
         ('cancelled', 'Cancelled')
     ], default='draft', tracking=True)
 
+    # ----------------------------
+    # CREATE
+    # ----------------------------
     @api.model
     def create(self, vals):
         if vals.get('enrollment_number', 'New') == 'New':
@@ -41,3 +53,12 @@ class TrainingEnrollment(models.Model):
                 'training.enrollment'
             ) or 'New'
         return super().create(vals)
+
+    # ----------------------------
+    # SECURITY FOR STATUS CHANGE
+    # ----------------------------
+    def write(self, vals):
+        if 'status' in vals:
+            if not self.env.user.has_group('training_student.group_training_manager'):
+                raise UserError("Only Manager can change status.")
+        return super().write(vals)

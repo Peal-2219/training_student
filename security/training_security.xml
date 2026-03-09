@@ -16,24 +16,24 @@
     <!-- Training Manager -->
     <record id="group_training_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-        <field name="implied_ids" eval="[(4, ref('group_training_user'))]"/>
+        <field name="category_id" ref="training_student.module_category_training"/>
+        <field name="implied_ids" eval="[(4, ref('training_student.group_training_user'))]"/>
     </record>
 
-    <!-- Record Rule: User sees only their students -->
-    <record id="rule_training_student_user" model="ir.rule">
-        <field name="name">Training Student: Own Records</field>
-        <field name="model_id" ref="model_training_student"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('group_training_user'))]"/>
-    </record>
-
-    <!-- Manager sees all -->
-    <record id="rule_training_student_manager" model="ir.rule">
-        <field name="name">Training Student: Manager Full Access</field>
-        <field name="model_id" ref="model_training_student"/>
+        <!-- USER: Can only READ Courses -->
+    <record id="rule_course_user_readonly" model="ir.rule">
+        <field name="name">Course User Read Only</field>
+        <field name="model_id" ref="model_training_course"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('group_training_manager'))]"/>
+        <field name="groups" eval="[(4, ref('training_student.group_training_user'))]"/>
+    </record>
+
+    <!-- USER: Can only READ Enrollments -->
+    <record id="rule_enrollment_user_readonly" model="ir.rule">
+        <field name="name">Enrollment User Read Only</field>
+        <field name="model_id" ref="model_training_enrollment"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('training_student.group_training_user'))]"/>
     </record>
 
 </odoo>

@@ -1,30 +1,48 @@
-<odoo>
-    <data>
-<!--
-          <record id="object0" model="training_student.training_student">
-            <field name="name">Object 0</field>
-            <field name="value">0</field>
-          </record>
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
 
-          <record id="object1" model="training_student.training_student">
-            <field name="name">Object 1</field>
-            <field name="value">10</field>
-          </record>
+    <!-- ===================== -->
+    <!-- DEMO STUDENTS -->
+    <!-- ===================== -->
 
-          <record id="object2" model="training_student.training_student">
-            <field name="name">Object 2</field>
-            <field name="value">20</field>
-          </record>
+    <record id="student_demo_1" model="training.student">
+        <field name="name">Peal</field>
+        <field name="email">pealpashmi@gmail.com</field>
+        <field name="dob">2004-05-15</field>
+        <field name="admission_date">2023-06-01</field>
+        <field name="course_id" ref="training_student.course_aiml"/>
+        <field name="state">draft</field>
+        <field name="active">True</field>
+    </record>
 
-          <record id="object3" model="training_student.training_student">
-            <field name="name">Object 3</field>
-            <field name="value">30</field>
-          </record>
+    <record id="student_demo_2" model="training.student">
+        <field name="name">Jinal</field>
+        <field name="email">jinal@gmail.com</field>
+        <field name="dob">1999-09-10</field>
+        <field name="admission_date">2022-07-10</field>
+        <field name="course_id" ref="training_student.course_aiml"/>
+        <field name="state">confirmed</field>
+        <field name="active">True</field>
+    </record>
 
-          <record id="object4" model="training_student.training_student">
-            <field name="name">Object 4</field>
-            <field name="value">40</field>
-          </record>
--->
-    </data>
+    <record id="student_demo_3" model="training.student">
+        <field name="name">Sonu</field>
+        <field name="email">sonu@gmail.com</field>
+        <field name="dob">1988-03-20</field>
+        <field name="admission_date">2021-01-15</field>
+        <field name="course_id" ref="training_student.course_it"/>
+        <field name="state">confirmed</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="student_demo_4" model="training.student">
+        <field name="name">Drashti</field>
+        <field name="email">d@gmail.com</field>
+        <field name="dob">1993-12-05</field>
+        <field name="admission_date">2020-08-01</field>
+        <field name="course_id" ref="training_student.course_aiml"/>
+        <field name="state">alumni</field>
+        <field name="active">False</field>
+    </record>
+
 </odoo>

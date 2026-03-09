@@ -14,6 +14,10 @@
         'views/enrollment_views.xml',
         'views/course_views.xml',
 ],
+'demo': [
+    'demo/course_demo.xml',
+    'demo/demo.xml',
+],
     'installable': True,
     'application': True,
 }

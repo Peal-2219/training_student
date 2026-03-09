@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <!-- STUDENT LIST -->
+    <!-- ================================================= -->
+    <!-- STUDENT LIST VIEW -->
+    <!-- ================================================= -->
     <record id="view_training_student_list" model="ir.ui.view">
         <field name="name">training.student.list</field>
         <field name="model">training.student</field>
@@ -10,18 +12,49 @@
                 <field name="name"/>
                 <field name="email"/>
                 <field name="student_age"/>
+                <field name="course_id"/>
                 <field name="state"/>
                 <field name="active"/>
             </list>
         </field>
     </record>
 
-    <!-- STUDENT FORM -->
+    <!-- ================================================= -->
+    <!-- STUDENT FORM VIEW -->
+    <!-- ================================================= -->
     <record id="view_training_student_form" model="ir.ui.view">
         <field name="name">training.student.form</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
             <form>
+
+                <header>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,confirmed,alumni"/>
+
+                    <button name="action_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="training_student.group_training_manager"/>
+
+                    <button name="action_alumni"
+                            string="Mark Alumni"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'confirmed'"
+                            groups="training_student.group_training_manager"/>
+
+                    <button name="action_reset_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"
+                            groups="training_student.group_training_manager"/>
+                </header>
+
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -58,14 +91,107 @@
         </field>
     </record>
 
-    <!-- ACTION -->
-    <record id="action_training_student" model="ir.actions.act_window">
-        <field name="name">Students</field>
-        <field name="res_model">training.student</field>
-        <field name="view_mode">list,form</field>
+    <!-- ================================================= -->
+    <!-- SEARCH VIEW (FIXED) -->
+    <!-- ================================================= -->
+    <record id="view_training_student_search" model="ir.ui.view">
+        <field name="name">training.student.search</field>
+        <field name="model">training.student</field>
+        <field name="arch" type="xml">
+            <search string="Search Students">
+
+                <!-- Search fields -->
+                <field name="name"/>
+                <field name="email"/>
+                <field name="course_id"/>
+                <field name="user_id"/>
+
+                <!-- State filters -->
+                <filter name="filter_draft"
+                        string="Draft"
+                        domain="[('state','=','draft')]"/>
+
+                <filter name="filter_confirmed"
+                        string="Confirmed"
+                        domain="[('state','=','confirmed')]"/>
+
+                <filter name="filter_alumni"
+                        string="Alumni"
+                        domain="[('state','=','alumni')]"/>
+
+                <separator/>
+
+                <!-- Active filters -->
+                <filter name="filter_active"
+                        string="Active"
+                        domain="[('active','=',True)]"/>
+
+                <filter name="filter_inactive"
+                        string="Inactive"
+                        domain="[('active','=',False)]"/>
+
+                <!-- Group By -->
+                <group expand="1" string="Group By">
+                    <filter name="group_state"
+                            string="Status"
+                            context="{'group_by':'state'}"/>
+
+                    <filter name="group_course"
+                            string="Course"
+                            context="{'group_by':'course_id'}"/>
+
+                    <filter name="group_user"
+                            string="Assigned User"
+                            context="{'group_by':'user_id'}"/>
+                </group>
+
+            </search>
+        </field>
     </record>
 
+    <!-- ================================================= -->
+    <!-- GRAPH VIEW (FIXED) -->
+    <!-- ================================================= -->
+    <record id="view_training_student_graph" model="ir.ui.view">
+        <field name="name">training.student.graph</field>
+        <field name="model">training.student</field>
+        <field name="arch" type="xml">
+            <graph string="Students by Status" type="bar">
+                <field name="state" type="row"/>
+                <field name="student_age" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+   <record id="view_training_student_calendar" model="ir.ui.view">
+    <field name="name">training.student.calendar</field>
+    <field name="model">training.student</field>
+    <field name="arch" type="xml">
+        <calendar
+            string="Students Birthdays"
+            date_start="dob"
+            color="course_id">
+
+            <field name="name"/>
+            <field name="course_id"/>
+            <field name="student_age"/>
+
+        </calendar>
+    </field>
+</record>
+    <!-- ================================================= -->
+    <!-- ACTION -->
+    <!-- ================================================= -->
+   <record id="action_training_student" model="ir.actions.act_window">
+    <field name="name">Students</field>
+    <field name="res_model">training.student</field>
+    <field name="view_mode">list,calendar,form,graph</field>
+    <field name="search_view_id" ref="view_training_student_search"/>
+</record>
+
+    <!-- ================================================= -->
     <!-- MENU -->
+    <!-- ================================================= -->
     <menuitem id="menu_training_root"
               name="Training"
               sequence="10"/>

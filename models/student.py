@@ -9,18 +9,17 @@ class TrainingStudent(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
 
-    # =========================
-    # STATE
-    # =========================
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('confirmed', 'Confirmed'),
-        ('alumni', 'Alumni')
-    ], default='draft', tracking=True)
+    state = fields.Selection(
+        [
+            ('draft', 'Draft'),
+            ('confirmed', 'Confirmed'),
+            ('alumni', 'Alumni')
+        ],
+        default='draft',
+        tracking=True,
+        string="Status"
+    )
 
-    # =========================
-    # BASIC FIELDS
-    # =========================
     name = fields.Char(required=True, tracking=True)
     email = fields.Char(required=True, tracking=True)
     dob = fields.Date(tracking=True)
@@ -52,9 +51,6 @@ class TrainingStudent(models.Model):
         string="Enrollments"
     )
 
-    # =========================
-    # COMPUTE AGE
-    # =========================
     @api.depends('dob')
     def _compute_student_age(self):
         for rec in self:
@@ -66,11 +62,23 @@ class TrainingStudent(models.Model):
             else:
                 rec.student_age = 0
 
-    # =========================
-    # SECURITY
-    # =========================
+    def action_confirm(self):
+        self._check_manager()
+        self.state = 'confirmed'
+
+    def action_alumni(self):
+        self._check_manager()
+        self.state = 'alumni'
+
+    def action_reset_draft(self):
+        self._check_manager()
+        self.state = 'draft'
+
+    def _check_manager(self):
+        if not self.env.user.has_group('training_student.group_training_manager'):
+            raise UserError("Only Manager can change student status.")
+
     def write(self, vals):
-        if 'course_id' in vals:
-            if not self.env.user.has_group('training_student.group_training_manager'):
-                raise UserError("Only Manager can assign course.")
+        if 'state' in vals or 'course_id' in vals:
+            self._check_manager()
         return super().write(vals)
