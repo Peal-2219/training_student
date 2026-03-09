@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
-from datetime import date
+from datetime import date, timedelta
 
 
 class TrainingStudent(models.Model):
@@ -9,18 +9,6 @@ class TrainingStudent(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
 
-<<<<<<< HEAD
-    state = fields.Selection(
-        [
-            ('draft', 'Draft'),
-            ('confirmed', 'Confirmed'),
-            ('alumni', 'Alumni')
-        ],
-        default='draft',
-        tracking=True,
-        string="Status"
-    )
-=======
     # =========================
     # STATE
     # =========================
@@ -30,8 +18,10 @@ class TrainingStudent(models.Model):
         ('approved', 'Approved'),
         ('cancelled', 'Cancelled')
     ], default='draft', tracking=True)
->>>>>>> 14c0cf5 ([ADD] state field in student model)
 
+    # =========================
+    # BASIC FIELDS
+    # =========================
     name = fields.Char(required=True, tracking=True)
     email = fields.Char(required=True, tracking=True)
     dob = fields.Date(tracking=True)
@@ -63,8 +53,6 @@ class TrainingStudent(models.Model):
         string="Enrollments"
     )
 
-<<<<<<< HEAD
-=======
     # =========================
     # STATE BUTTON ACTIONS
     # =========================
@@ -87,7 +75,6 @@ class TrainingStudent(models.Model):
     # =========================
     # COMPUTE AGE
     # =========================
->>>>>>> 14c0cf5 ([ADD] state field in student model)
     @api.depends('dob')
     def _compute_student_age(self):
         for rec in self:
@@ -99,23 +86,33 @@ class TrainingStudent(models.Model):
             else:
                 rec.student_age = 0
 
-    def action_confirm(self):
-        self._check_manager()
-        self.state = 'confirmed'
-
-    def action_alumni(self):
-        self._check_manager()
-        self.state = 'alumni'
-
-    def action_reset_draft(self):
-        self._check_manager()
-        self.state = 'draft'
-
-    def _check_manager(self):
-        if not self.env.user.has_group('training_student.group_training_manager'):
-            raise UserError("Only Manager can change student status.")
-
+    # =========================
+    # SECURITY
+    # =========================
     def write(self, vals):
-        if 'state' in vals or 'course_id' in vals:
-            self._check_manager()
+        if 'course_id' in vals:
+            if not self.env.user.has_group('training_student.group_training_manager'):
+                raise UserError("Only Manager can assign course.")
         return super().write(vals)
+
+    # =========================
+    # CRON JOB METHOD
+    # =========================
+    @api.model
+    def cron_auto_update_student_state(self):
+
+        today = date.today()
+
+        students = self.search([])
+
+        for student in students:
+
+            # Draft → Cancelled after 3 days
+            if student.state == 'draft' and student.admission_date:
+                if student.admission_date <= today - timedelta(days=3):
+                    student.state = 'cancelled'
+
+            # Confirmed → Approved after 7 days
+            if student.state == 'confirmed' and student.admission_date:
+                if student.admission_date <= today - timedelta(days=7):
+                    student.state = 'approved'
