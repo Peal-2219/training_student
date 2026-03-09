@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="cron_auto_update_student_state" model="ir.cron">
-        <field name="name">Auto Update Student State</field>
+    <data>
 
-        <!-- Model -->
-        <field name="model_id" ref="training_student.model_training_student"/>
+        <record id="cron_auto_update_student_state" model="ir.cron">
 
-        <!-- Python Code -->
-        <field name="state">code</field>
-        <field name="code">model.cron_auto_update_student_state()</field>
+            <field name="name">Auto Update Student State</field>
 
-        <!-- Run every 1 day -->
-        <field name="interval_number">1</field>
-        <field name="interval_type">days</field>
+            <field name="model_id" ref="training_student.model_training_student"/>
 
-        <!-- Run as Administrator -->
-        <field name="user_id" ref="base.user_root"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_auto_update_student_state()</field>
 
-        <!-- Enable Cron -->
-        <field name="active" eval="True"/>
-    </record>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+
+            <field name="user_id" ref="base.user_root"/>
+
+            <field name="active" eval="True"/>
+
+        </record>
+
+        <!-- Cron: Send confirmation email ~5 minutes after student is confirmed -->
+        <record id="cron_send_confirmation_email" model="ir.cron">
+
+            <field name="name">Send Student Confirmation Email</field>
+
+            <field name="model_id" ref="training_student.model_training_student"/>
+
+            <field name="state">code</field>
+            <field name="code">model.cron_send_confirmation_email()</field>
+
+            <!-- Run every 5 minutes so the email is sent ~5 min after confirmation -->
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+
+            <field name="user_id" ref="base.user_root"/>
+
+            <field name="active" eval="True"/>
+
+        </record>
+
+    </data>
 
 </odoo>

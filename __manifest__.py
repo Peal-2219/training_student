@@ -11,6 +11,7 @@
         'security/ir.model.access.csv',
         'data/sequence.xml',
         'data/cron.xml',
+        'data/student_email_template.xml',
         'views/training_student_views.xml',
         'views/enrollment_views.xml',
         'views/course_views.xml',
