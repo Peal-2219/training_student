@@ -9,6 +9,7 @@ class TrainingStudent(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'name'
 
+<<<<<<< HEAD
     state = fields.Selection(
         [
             ('draft', 'Draft'),
@@ -19,6 +20,17 @@ class TrainingStudent(models.Model):
         tracking=True,
         string="Status"
     )
+=======
+    # =========================
+    # STATE
+    # =========================
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('approved', 'Approved'),
+        ('cancelled', 'Cancelled')
+    ], default='draft', tracking=True)
+>>>>>>> 14c0cf5 ([ADD] state field in student model)
 
     name = fields.Char(required=True, tracking=True)
     email = fields.Char(required=True, tracking=True)
@@ -51,6 +63,31 @@ class TrainingStudent(models.Model):
         string="Enrollments"
     )
 
+<<<<<<< HEAD
+=======
+    # =========================
+    # STATE BUTTON ACTIONS
+    # =========================
+    def action_confirm(self):
+        for rec in self:
+            rec.state = 'confirmed'
+
+    def action_approve(self):
+        for rec in self:
+            rec.state = 'approved'
+
+    def action_cancel(self):
+        for rec in self:
+            rec.state = 'cancelled'
+
+    def action_reset_draft(self):
+        for rec in self:
+            rec.state = 'draft'
+
+    # =========================
+    # COMPUTE AGE
+    # =========================
+>>>>>>> 14c0cf5 ([ADD] state field in student model)
     @api.depends('dob')
     def _compute_student_age(self):
         for rec in self:

@@ -19,6 +19,7 @@
         </field>
     </record>
 
+<<<<<<< HEAD
     <!-- ================================================= -->
     <!-- STUDENT FORM VIEW -->
     <!-- ================================================= -->
@@ -67,30 +68,20 @@
                         <field name="course_id"
                                groups="training_student.group_training_manager"/>
                     </group>
+=======
+    <!-- STUDENT FORM -->
+   <record id="view_training_student_form" model="ir.ui.view">
+    <field name="name">training.student.form</field>
+    <field name="model">training.student</field>
+    <field name="arch" type="xml">
+>>>>>>> 14c0cf5 ([ADD] state field in student model)
 
-                    <notebook>
-                        <page string="Enrollments">
-                            <field name="enrollment_ids" readonly="1">
-                                <list>
-                                    <field name="enrollment_number"/>
-                                    <field name="course_id"/>
-                                    <field name="enrollment_date"/>
-                                    <field name="status"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
+        <form>
 
-                <chatter>
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </chatter>
-            </form>
-        </field>
-    </record>
+            <!-- STATUSBAR -->
+            <header>
 
+<<<<<<< HEAD
     <!-- ================================================= -->
     <!-- SEARCH VIEW (FIXED) -->
     <!-- ================================================= -->
@@ -147,6 +138,81 @@
 
             </search>
         </field>
+=======
+    <button name="action_confirm"
+            string="Confirm"
+            type="object"
+            class="btn-primary"
+            invisible="state != 'draft'"/>
+
+    <button name="action_approve"
+            string="Approve"
+            type="object"
+            class="btn-success"
+            invisible="state != 'confirmed'"/>
+
+    <button name="action_cancel"
+            string="Cancel"
+            type="object"
+            class="btn-danger"
+            invisible="state == 'cancelled'"/>
+
+    <button name="action_reset_draft"
+            string="Reset to Draft"
+            type="object"
+            invisible="state != 'cancelled'"/>
+
+    <field name="state"
+           widget="statusbar"
+           statusbar_visible="draft,confirmed,approved,cancelled"/>
+
+</header>
+
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="dob"/>
+                    <field name="student_age" readonly="1"/>
+                    <field name="admission_date"/>
+                    <field name="user_id"/>
+                    <field name="active"/>
+
+                    <field name="course_id"
+                           groups="training_student.group_training_manager"/>
+                </group>
+
+                <notebook>
+                    <page string="Enrollments">
+                        <field name="enrollment_ids" readonly="1">
+                            <list>
+                                <field name="enrollment_number"/>
+                                <field name="course_id"/>
+                                <field name="enrollment_date"/>
+                                <field name="status"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+
+            </sheet>
+
+            <chatter>
+                <field name="message_follower_ids"/>
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </chatter>
+
+        </form>
+
+    </field>
+</record>
+    <!-- ACTION -->
+    <record id="action_training_student" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">training.student</field>
+        <field name="view_mode">list,form</field>
+>>>>>>> 14c0cf5 ([ADD] state field in student model)
     </record>
 
     <!-- ================================================= -->
