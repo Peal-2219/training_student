@@ -13,6 +13,10 @@
         'data/student_email_template.xml',
         'data/student_automation.xml',
         'data/cron.xml',
+
+        'reports/student_report_template.xml',
+        'reports/student_report_action.xml',
+
         'views/training_student_views.xml',
         'views/enrollment_views.xml',
         'views/course_views.xml',
