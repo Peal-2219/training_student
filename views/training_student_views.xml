@@ -15,25 +15,67 @@
             </list>
         </field>
     </record>
-
+    
     <record id="view_training_student_form" model="ir.ui.view">
         <field name="name">training.student.form</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
+
             <form>
+
                 <header>
-                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"
+
+                    <!-- EXPORT BUTTON -->
+                    <button name="action_export_students_xlsx"
+                            type="object"
+                            string="Export Excel"
+                            class="btn-primary"/>
+
+                    <button name="action_confirm" string="Confirm" type="object"
+                            class="btn-primary"
                             invisible="state != 'draft'"/>
-                    <button name="action_approve" string="Approve" type="object" class="btn-success"
+
+                    <button name="action_approve" string="Approve"
+                            type="object"
+                            class="btn-success"
                             invisible="state != 'confirmed'"/>
-                    <button name="action_cancel" string="Cancel" type="object" class="btn-danger"
+
+                    <button name="action_cancel" string="Cancel"
+                            type="object"
+                            class="btn-danger"
                             invisible="state == 'cancelled'"/>
-                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+
+                    <button name="action_reset_draft"
+                            string="Reset to Draft"
+                            type="object"
                             invisible="state != 'cancelled'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved,cancelled"/>
+
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,confirmed,approved,cancelled"/>
+
                 </header>
+
                 <sheet>
+
+                    <!-- SMART BUTTON -->
+                    <div class="oe_button_box" name="button_box">
+
+                        <button name="action_view_enrollments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book">
+
+                            <field name="enrollment_count"
+                                   widget="statinfo"
+                                   string="Enrollments"/>
+
+                        </button>
+
+                    </div>
+
                     <group>
+
                         <field name="name"/>
                         <field name="email"/>
                         <field name="dob"/>
@@ -41,29 +83,20 @@
                         <field name="admission_date"/>
                         <field name="user_id"/>
                         <field name="active"/>
-                        <field name="course_id" groups="training_student.group_training_manager"/>
+                        <field name="course_id"
+                               groups="training_student.group_training_manager"/>
+
                     </group>
-                    <notebook>
-                        <page string="Enrollments">
-                            <field name="enrollment_ids" readonly="1">
-                                <list>
-                                    <field name="enrollment_number"/>
-                                    <field name="course_id"/>
-                                    <field name="enrollment_date"/>
-                                    <field name="status"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
+
                 </sheet>
-                <chatter>
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </chatter>
+
+                <chatter/>
+
             </form>
+
         </field>
     </record>
+
 
     <record id="view_training_student_search" model="ir.ui.view">
         <field name="name">training.student.search</field>
