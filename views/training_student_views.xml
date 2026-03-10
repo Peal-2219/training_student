@@ -19,7 +19,6 @@
         </field>
     </record>
 
-<<<<<<< HEAD
     <!-- ================================================= -->
     <!-- STUDENT FORM VIEW -->
     <!-- ================================================= -->
@@ -30,33 +29,38 @@
             <form>
 
                 <header>
-                    <field name="state"
-                           widget="statusbar"
-                           statusbar_visible="draft,confirmed,alumni"/>
 
                     <button name="action_confirm"
                             string="Confirm"
                             type="object"
                             class="btn-primary"
-                            invisible="state != 'draft'"
-                            groups="training_student.group_training_manager"/>
+                            invisible="state != 'draft'"/>
 
-                    <button name="action_alumni"
-                            string="Mark Alumni"
+                    <button name="action_approve"
+                            string="Approve"
                             type="object"
                             class="btn-success"
-                            invisible="state != 'confirmed'"
-                            groups="training_student.group_training_manager"/>
+                            invisible="state != 'confirmed'"/>
+
+                    <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            class="btn-danger"
+                            invisible="state == 'cancelled'"/>
 
                     <button name="action_reset_draft"
                             string="Reset to Draft"
                             type="object"
-                            class="btn-secondary"
-                            invisible="state == 'draft'"
-                            groups="training_student.group_training_manager"/>
+                            invisible="state != 'cancelled'"/>
+
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,confirmed,approved,cancelled"/>
+
                 </header>
 
                 <sheet>
+
                     <group>
                         <field name="name"/>
                         <field name="email"/>
@@ -65,25 +69,38 @@
                         <field name="admission_date"/>
                         <field name="user_id"/>
                         <field name="active"/>
+
                         <field name="course_id"
                                groups="training_student.group_training_manager"/>
                     </group>
-=======
-    <!-- STUDENT FORM -->
-   <record id="view_training_student_form" model="ir.ui.view">
-    <field name="name">training.student.form</field>
-    <field name="model">training.student</field>
-    <field name="arch" type="xml">
->>>>>>> 14c0cf5 ([ADD] state field in student model)
 
-        <form>
+                    <notebook>
+                        <page string="Enrollments">
+                            <field name="enrollment_ids" readonly="1">
+                                <list>
+                                    <field name="enrollment_number"/>
+                                    <field name="course_id"/>
+                                    <field name="enrollment_date"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
 
-            <!-- STATUSBAR -->
-            <header>
+                </sheet>
 
-<<<<<<< HEAD
+                <chatter>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </chatter>
+
+            </form>
+        </field>
+    </record>
+
     <!-- ================================================= -->
-    <!-- SEARCH VIEW (FIXED) -->
+    <!-- SEARCH VIEW -->
     <!-- ================================================= -->
     <record id="view_training_student_search" model="ir.ui.view">
         <field name="name">training.student.search</field>
@@ -91,13 +108,11 @@
         <field name="arch" type="xml">
             <search string="Search Students">
 
-                <!-- Search fields -->
                 <field name="name"/>
                 <field name="email"/>
                 <field name="course_id"/>
                 <field name="user_id"/>
 
-                <!-- State filters -->
                 <filter name="filter_draft"
                         string="Draft"
                         domain="[('state','=','draft')]"/>
@@ -107,12 +122,10 @@
                         domain="[('state','=','confirmed')]"/>
 
                 <filter name="filter_alumni"
-                        string="Alumni"
-                        domain="[('state','=','alumni')]"/>
-
+                        string="Approved"
+                        domain="[('state','=','approved')]"/>
                 <separator/>
 
-                <!-- Active filters -->
                 <filter name="filter_active"
                         string="Active"
                         domain="[('active','=',True)]"/>
@@ -121,7 +134,6 @@
                         string="Inactive"
                         domain="[('active','=',False)]"/>
 
-                <!-- Group By -->
                 <group expand="1" string="Group By">
                     <filter name="group_state"
                             string="Status"
@@ -138,85 +150,10 @@
 
             </search>
         </field>
-=======
-    <button name="action_confirm"
-            string="Confirm"
-            type="object"
-            class="btn-primary"
-            invisible="state != 'draft'"/>
-
-    <button name="action_approve"
-            string="Approve"
-            type="object"
-            class="btn-success"
-            invisible="state != 'confirmed'"/>
-
-    <button name="action_cancel"
-            string="Cancel"
-            type="object"
-            class="btn-danger"
-            invisible="state == 'cancelled'"/>
-
-    <button name="action_reset_draft"
-            string="Reset to Draft"
-            type="object"
-            invisible="state != 'cancelled'"/>
-
-    <field name="state"
-           widget="statusbar"
-           statusbar_visible="draft,confirmed,approved,cancelled"/>
-
-</header>
-
-            <sheet>
-                <group>
-                    <field name="name"/>
-                    <field name="email"/>
-                    <field name="dob"/>
-                    <field name="student_age" readonly="1"/>
-                    <field name="admission_date"/>
-                    <field name="user_id"/>
-                    <field name="active"/>
-
-                    <field name="course_id"
-                           groups="training_student.group_training_manager"/>
-                </group>
-
-                <notebook>
-                    <page string="Enrollments">
-                        <field name="enrollment_ids" readonly="1">
-                            <list>
-                                <field name="enrollment_number"/>
-                                <field name="course_id"/>
-                                <field name="enrollment_date"/>
-                                <field name="status"/>
-                            </list>
-                        </field>
-                    </page>
-                </notebook>
-
-            </sheet>
-
-            <chatter>
-                <field name="message_follower_ids"/>
-                <field name="activity_ids"/>
-                <field name="message_ids"/>
-            </chatter>
-
-        </form>
-
-    </field>
-</record>
-    <!-- ACTION -->
-    <record id="action_training_student" model="ir.actions.act_window">
-        <field name="name">Students</field>
-        <field name="res_model">training.student</field>
-        <field name="view_mode">list,form</field>
->>>>>>> 14c0cf5 ([ADD] state field in student model)
     </record>
 
     <!-- ================================================= -->
-    <!-- GRAPH VIEW (FIXED) -->
+    <!-- GRAPH VIEW -->
     <!-- ================================================= -->
     <record id="view_training_student_graph" model="ir.ui.view">
         <field name="name">training.student.graph</field>
@@ -229,31 +166,34 @@
         </field>
     </record>
 
-   <record id="view_training_student_calendar" model="ir.ui.view">
-    <field name="name">training.student.calendar</field>
-    <field name="model">training.student</field>
-    <field name="arch" type="xml">
-        <calendar
-            string="Students Birthdays"
-            date_start="dob"
-            color="course_id">
+    <!-- ================================================= -->
+    <!-- CALENDAR VIEW -->
+    <!-- ================================================= -->
+    <record id="view_training_student_calendar" model="ir.ui.view">
+        <field name="name">training.student.calendar</field>
+        <field name="model">training.student</field>
+        <field name="arch" type="xml">
+            <calendar string="Students Birthdays"
+                      date_start="dob"
+                      color="course_id">
 
-            <field name="name"/>
-            <field name="course_id"/>
-            <field name="student_age"/>
+                <field name="name"/>
+                <field name="course_id"/>
+                <field name="student_age"/>
 
-        </calendar>
-    </field>
-</record>
+            </calendar>
+        </field>
+    </record>
+
     <!-- ================================================= -->
     <!-- ACTION -->
     <!-- ================================================= -->
-   <record id="action_training_student" model="ir.actions.act_window">
-    <field name="name">Students</field>
-    <field name="res_model">training.student</field>
-    <field name="view_mode">list,calendar,form,graph</field>
-    <field name="search_view_id" ref="view_training_student_search"/>
-</record>
+    <record id="action_training_student" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">training.student</field>
+        <field name="view_mode">list,calendar,form,graph</field>
+        <field name="search_view_id" ref="view_training_student_search"/>
+    </record>
 
     <!-- ================================================= -->
     <!-- MENU -->

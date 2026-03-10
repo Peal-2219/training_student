@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_student_list">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+
+                <style>
+                    .page {
+                        font-family: 'Helvetica', sans-serif;
+                        padding-top: 10px;
+                        color: #333;
+                    }
+                    .header {
+                        border-bottom: 2px solid #1b66d1;
+                        padding-bottom: 5px;
+                        margin-bottom: 15px;
+                    }
+                    .footer {
+                        border-top: 1px solid #1b66d1;
+                        font-size: 11px;
+                        color: #666;
+                        padding-top: 5px;
+                    }
+                    .company-title {
+                        color: #1b66d1;
+                        font-size: 22px;
+                        font-weight: bold;
+                        margin: 0;
+                    }
+                    .table-modern {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                    }
+                    .table-modern th {
+                        background-color: #1b66d1;
+                        color: white;
+                        padding: 10px 8px;
+                        text-align: left;
+                        text-transform: uppercase;
+                        font-size: 12px;
+                    }
+                    .table-modern td {
+                        padding: 10px 8px;
+                        border-bottom: 1px solid #eee;
+                        font-size: 13px;
+                    }
+                    .right-align-box {
+                        text-align: right;
+                        padding-right: 10px !important;
+                    }
+                </style>
+
+                <div class="header">
+                    <div class="row align-items-center">
+                        <div class="col-3">
+                            <img src="/training_student/static/src/img/logo.png" style="max-height: 55px;"/>
+                        </div>
+
+                        <div class="col-6 text-center">
+                            <div class="company-title">WANBUFFER TECHNOLOGIES</div>
+                            <div style="font-size: 13px; color: #555;">Training Management System</div>
+                            <div style="font-size: 13px; font-weight: bold; margin-top: 3px; text-decoration: underline;">
+                                STUDENT LIST REPORT
+                            </div>
+                        </div>
+
+                        <div class="col-3 " style="font-size: 15px; padding-top: 10px; text-align:right">
+                            <strong>DATE:</strong> <span t-esc="time.strftime('%d-%m-%Y')"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <div class="row" style="font-size: 14px; margin-bottom: 15px;">
+                        <div class="col-6">
+                            <span style="color: #1b66d1; font-weight: bold;">Company:</span> Wanbuffer Technologies
+                        </div>
+                        <div class="col-6 right-align-box">
+                            <span style="color: #1b66d1; font-weight: bold;">Total Enrolled:</span>
+                            <span t-esc="len(docs)"/>
+                        </div>
+                    </div>
+
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Student Name</th>
+                                <th style="width: 30%;">Email</th>
+                                <th style="width: 10%;">Age</th>
+                                <th style="width: 15%;">Course</th>
+                                <th style="width: 15%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="student">
+                                <tr>
+                                    <td><span t-field="student.name"/></td>
+                                    <td><span t-field="student.email"/></td>
+                                    <td><span t-field="student.student_age"/></td>
+                                    <td><span t-field="student.course_id.name"/></td>
+                                    <td>
+                                        <span t-field="student.state"
+                                              t-attf-style="font-weight: bold; color: #{'#28a745' if student.state == 'Approved' else '#dc3545' if student.state == 'Cancelled' else '#1b66d1'};"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-8">
+                            <strong>Address:</strong>
+                            208, Swastik Society Cross Rd, Navrangpura, Ahmedabad, Gujarat 380009
+                        </div>
+                        <div class="col-4 right-align-box">
+                            <span style="color: #1b66d1;">www.wanbuffer.com</span> |
+                            Page <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+
+            </t>
+        </t>
+    </template>
+</odoo>
