@@ -122,9 +122,8 @@
                         domain="[('state','=','confirmed')]"/>
 
                 <filter name="filter_alumni"
-                        string="Alumni"
-                        domain="[('state','=','alumni')]"/>
-
+                        string="Approved"
+                        domain="[('state','=','approved')]"/>
                 <separator/>
 
                 <filter name="filter_active"
