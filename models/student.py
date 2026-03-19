@@ -7,7 +7,18 @@ import io
 import base64
 import xlsxwriter
 
+from odoo import models, fields
 
+# class SchoolClass(models.Model):
+#     _name = 'school.class'
+#
+#     name = fields.Char(string="Class Name")
+#     student_ids = fields.One2many(
+#         'school.student',
+#         'class_id',
+#         string="Students",
+#         ondelete='cascade'
+#     )
 class TrainingStudent(models.Model):
     _name = 'training.student'
     _description = 'Training Student'

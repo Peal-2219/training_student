@@ -1,0 +1,68 @@
+# QWeb Templates: Inheritance Chains
+
+## 1. Context: `student_report_template.xml`
+The user requested to map the inheritance chain specifically for the student report. 
+
+In `custom_addons/training_student/reports/student_report_template.xml`, the base template is defined as `<template id="report_student_list">`.
+
+It builds its structure by calling Odoo's core web templates rather than extending them:
+1. `t-call="web.html_container"`: Provides the base HTML `<html>`, `<head>`, and `<body>` structure.
+2. `t-call="web.basic_layout"`: Provides a minimalist layout structure for the PDF report.
+
+## 2. Extending the Student Report (Server-Side QWeb)
+Because `report_student_list` is a **server-side template** (used for generating PDF reports), it does *not* use `t-extend` or `t-jquery`. Instead, standard XML inheritance via `inherit_id` and `xpath` is used.
+
+Here is the inheritance chain mapping to extend the `report_student_list` template:
+
+```xml
+<!-- Extending the existing student report template -->
+<template id="report_student_list_extended" inherit_id="training_student.report_student_list">
+    
+    <!-- 1. Example: Appending a new column header to the table -->
+    <xpath expr="//table[hasclass('table-modern')]/thead/tr" position="inside">
+        <th style="width: 15%;">Phone</th>
+    </xpath>
+    
+    <!-- 2. Example: Appending the corresponding row data -->
+    <xpath expr="//table[hasclass('table-modern')]/tbody/t/tr" position="inside">
+        <td><span t-field="student.phone"/></td>
+    </xpath>
+
+    <!-- 3. Example: Replacing the title text -->
+    <xpath expr="//div[hasclass('company-title')]/following-sibling::div[2]" position="replace">
+        <div style="font-size: 13px; font-weight: bold; margin-top: 3px; text-decoration: underline;">
+            EXTENDED STUDENT LIST REPORT
+        </div>
+    </xpath>
+</template>
+```
+
+## 3. Legacy Client-Side Mapping (`t-extend` & `t-jquery`)
+If `report_student_list` had been a legacy client-side JavaScript template (Odoo 14 and older) located in `static/src/xml`, the exact same inheritance chain mapped above would have been written using `t-extend` and `t-jquery`:
+
+```xml
+<t t-extend="training_student.report_student_list">
+    <!-- 1. Appending a new column header -->
+    <t t-jquery=".table-modern thead tr" t-operation="append">
+        <th style="width: 15%;">Phone</th>
+    </t>
+    
+    <!-- 2. Appending the corresponding row data -->
+    <t t-jquery=".table-modern tbody tr" t-operation="append">
+        <td><span t-esc="student.phone"/></td>
+    </t>
+
+    <!-- 3. Replacing the title text -->
+    <t t-jquery=".company-title + div + div" t-operation="replace">
+        <div style="font-size: 13px; font-weight: bold; margin-top: 3px; text-decoration: underline;">
+            EXTENDED STUDENT LIST REPORT
+        </div>
+    </t>
+</t>
+```
+
+### Summary of Mapping:
+*   **Base Template**: `report_student_list`
+*   **Legacy Extension Directive**: `t-extend="training_student.report_student_list"`
+*   **Selectors**: `t-jquery` acts like `xpath expr="..."` using CSS selectors.
+*   **Operations**: `t-operation="append"` maps to `position="inside"`, and `t-operation="replace"` maps to `position="replace"`.
