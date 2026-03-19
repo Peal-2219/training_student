@@ -33,3 +33,12 @@ class TrainingCourse(models.Model):
     def _compute_student_count(self):
         for record in self:
             record.student_count = len(record.student_ids)
+
+    def action_view_students(self):
+        return {
+            'name': 'Students',
+            'type': 'ir.actions.act_window',
+            'res_model': 'training.student',
+            'view_mode': 'list,form',
+            'domain': [('course_id', '=', self.id)],
+        }

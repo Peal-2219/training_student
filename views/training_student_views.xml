@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+    <!-- ================= LIST VIEW ================= -->
     <record id="view_training_student_list" model="ir.ui.view">
         <field name="name">training.student.list</field>
         <field name="model">training.student</field>
@@ -16,24 +17,78 @@
         </field>
     </record>
 
+    <!-- ================= FORM VIEW ================= -->
     <record id="view_training_student_form" model="ir.ui.view">
         <field name="name">training.student.form</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
             <form>
+
+                <!-- HEADER -->
                 <header>
-                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"
+
+                    <!-- EXPORT BUTTON (VISIBLE TO BOTH) -->
+                    <button name="action_export_students_xlsx"
+                            type="object"
+                            string="Export Excel"
+                            class="btn-primary"/>
+
+                    <!-- MANAGER BUTTONS ONLY -->
+
+                    <button name="action_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"
+                            groups="training_student.group_training_manager"
                             invisible="state != 'draft'"/>
-                    <button name="action_approve" string="Approve" type="object" class="btn-success"
+
+                    <button name="action_approve"
+                            string="Approve"
+                            type="object"
+                            class="btn-success"
+                            groups="training_student.group_training_manager"
                             invisible="state != 'confirmed'"/>
-                    <button name="action_cancel" string="Cancel" type="object" class="btn-danger"
+
+                    <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            class="btn-danger"
+                            groups="training_student.group_training_manager"
                             invisible="state == 'cancelled'"/>
-                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+
+                    <button name="action_reset_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            groups="training_student.group_training_manager"
                             invisible="state != 'cancelled'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved,cancelled"/>
+
+                    <!-- STATUS BAR -->
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,confirmed,approved,cancelled"/>
+
                 </header>
+
                 <sheet>
+
+                    <!-- SMART BUTTON -->
+                    <div class="oe_button_box" name="button_box">
+
+                        <button name="action_view_enrollments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book">
+
+                            <field name="enrollment_count"
+                                   widget="statinfo"
+                                   string="Enrollments"/>
+
+                        </button>
+
+                    </div>
+
                     <group>
+
                         <field name="name"/>
                         <field name="email"/>
                         <field name="dob"/>
@@ -41,30 +96,24 @@
                         <field name="admission_date"/>
                         <field name="user_id"/>
                         <field name="active"/>
-                        <field name="course_id" groups="training_student.group_training_manager"/>
+
+                        <!-- COURSE ONLY FOR MANAGER -->
+                        <field name="course_id"
+                               groups="training_student.group_training_manager"/>
+
                     </group>
-                    <notebook>
-                        <page string="Enrollments">
-                            <field name="enrollment_ids" readonly="1">
-                                <list>
-                                    <field name="enrollment_number"/>
-                                    <field name="course_id"/>
-                                    <field name="enrollment_date"/>
-                                    <field name="status"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
+
                 </sheet>
-                <chatter>
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </chatter>
+
+                <chatter/>
+
             </form>
+
         </field>
     </record>
 
+
+    <!-- ================= SEARCH VIEW ================= -->
     <record id="view_training_student_search" model="ir.ui.view">
         <field name="name">training.student.search</field>
         <field name="model">training.student</field>
@@ -74,48 +123,83 @@
                 <field name="email"/>
                 <field name="course_id"/>
                 <field name="user_id"/>
-                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
-                <filter name="filter_confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
-                <filter name="filter_alumni" string="Approved" domain="[('state','=','approved')]"/>
+
+                <filter name="filter_draft"
+                        string="Draft"
+                        domain="[('state','=','draft')]"/>
+
+                <filter name="filter_confirmed"
+                        string="Confirmed"
+                        domain="[('state','=','confirmed')]"/>
+
+                <filter name="filter_alumni"
+                        string="Approved"
+                        domain="[('state','=','approved')]"/>
+
                 <separator/>
-                <filter name="filter_active" string="Active" domain="[('active','=',True)]"/>
-                <filter name="filter_inactive" string="Inactive" domain="[('active','=',False)]"/>
+
+                <filter name="filter_active"
+                        string="Active"
+                        domain="[('active','=',True)]"/>
+
+                <filter name="filter_inactive"
+                        string="Inactive"
+                        domain="[('active','=',False)]"/>
+
                 <group expand="1" string="Group By">
-                    <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
-                    <filter name="group_course" string="Course" context="{'group_by':'course_id'}"/>
-                    <filter name="group_user" string="Assigned User" context="{'group_by':'user_id'}"/>
+
+                    <filter name="group_state"
+                            string="Status"
+                            context="{'group_by':'state'}"/>
+
+                    <filter name="group_course"
+                            string="Course"
+                            context="{'group_by':'course_id'}"/>
+
+                    <filter name="group_user"
+                            string="Assigned User"
+                            context="{'group_by':'user_id'}"/>
+
                 </group>
             </search>
         </field>
     </record>
 
+
+    <!-- ================= GRAPH VIEW ================= -->
     <record id="view_training_student_graph" model="ir.ui.view">
         <field name="name">training.student.graph</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
-            <graph string="Student Analysis" type="bar" sample="1">
+            <graph string="Student Analysis" type="bar">
                 <field name="course_id" type="row"/>
                 <field name="state" type="col"/>
             </graph>
         </field>
     </record>
 
+
+    <!-- ================= PIVOT VIEW ================= -->
     <record id="view_training_student_pivot" model="ir.ui.view">
         <field name="name">training.student.pivot</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
-            <pivot string="Student Enrollment Analysis" sample="1">
+            <pivot string="Student Enrollment Analysis">
                 <field name="course_id" type="row"/>
                 <field name="state" type="col"/>
             </pivot>
         </field>
     </record>
 
+
+    <!-- ================= CALENDAR ================= -->
     <record id="view_training_student_calendar" model="ir.ui.view">
         <field name="name">training.student.calendar</field>
         <field name="model">training.student</field>
         <field name="arch" type="xml">
-            <calendar string="Students Birthdays" date_start="dob" color="course_id">
+            <calendar string="Students Birthdays"
+                      date_start="dob"
+                      color="course_id">
                 <field name="name"/>
                 <field name="course_id"/>
                 <field name="student_age"/>
@@ -123,6 +207,8 @@
         </field>
     </record>
 
+
+    <!-- ================= ACTION ================= -->
     <record id="action_training_student" model="ir.actions.act_window">
         <field name="name">Students</field>
         <field name="res_model">training.student</field>
@@ -130,8 +216,16 @@
         <field name="search_view_id" ref="view_training_student_search"/>
     </record>
 
-    <menuitem id="menu_training_root" name="Training" sequence="10"/>
-    <menuitem id="menu_training_student" name="Students" parent="menu_training_root" action="action_training_student"
+
+    <!-- ================= MENUS ================= -->
+    <menuitem id="menu_training_root"
+              name="Training"
+              sequence="10"/>
+
+    <menuitem id="menu_training_student"
+              name="Students"
+              parent="menu_training_root"
+              action="action_training_student"
               sequence="20"/>
 
 </odoo>

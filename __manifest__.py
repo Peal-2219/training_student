@@ -5,7 +5,7 @@
     'description': 'Manage students, courses and enrollments',
     'author': 'Peal-wb',
     'category': 'Training',
-    'depends': ['base', 'mail', 'base_automation'],
+    'depends': ['base', 'mail', 'base_automation', 'website'],
     'data': [
         'security/training_security.xml',
         'security/ir.model.access.csv',
@@ -20,6 +20,7 @@
         'views/training_student_views.xml',
         'views/enrollment_views.xml',
         'views/course_views.xml',
+        'views/website_templates.xml',
     ],
     'demo': [
         'demo/course_demo.xml',
